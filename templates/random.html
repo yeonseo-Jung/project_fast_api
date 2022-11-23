@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% set active_page = "random" %}
+
+{% block title %}api random number{% endblock %}
+
+{% block head %}
+{{ super() }}
+
+
+{% endblock %}
+
+{% block page_content %}
+<h2 class="cap">Random Number Generator</h2>
+<br><br>
+
+<h3>Single Integer</h3>
+<div>
+    <p>
+        <form action="/random/result" method="post" autocomplete="off">
+            <label>Enter the Integer: </label>
+            <input type="text" name="integer" size="45" required />
+            <input type="submit" value="Submit">
+        </form>
+    </p>
+</div>
+<div class="random_number">
+    {% if error_0 %}
+        <p>
+            {{ error_msg }}
+        </p>
+    {% else %}
+        <p>
+            <li>
+                {{ "Input Integer: " }}
+                {{ integer }}
+            </li>
+            <br>
+            <li>
+                {{ "Random Number: " }}
+                {{ random_number }}
+            </li>
+            <br>
+            <li>
+                {{ "Elapsed Time: " }}
+                {{ elapsed_ms }}
+                {{ " ms" }}
+            </li>
+        </p>
+    {% endif %}
+</div>
+
+<br>
+
+<h3>Multi Integers</h3>
+<div>
+    <p>
+        <form action="/random/add" method="post" autocomplete="off">
+            <label>Enter the Integer: </label>
+            <input type="text" name="integers" required />
+            <input type="submit" value="Add">
+        </form>
+    </p>
+</div>
+<div>
+    {% if error_1 %}
+        <p>
+            {{ error_msg_1 }}
+        </p>
+    {% else %}
+        {% for integer in integers %}
+            <li>
+                {{ integer }}
+            </li>
+        {% endfor %}
+    {% endif %}
+</div>
+<div>
+    <p>
+        <form action="/random/iterations" method="post" autocomplete="off">
+            <label>Enter the Iteration Counts: </label>
+            <input type="text" name="iterations" required />
+            <input type="submit" value="Submit">
+        </form>
+    </p>
+</div>
+<div>
+    {% if error_2 %}
+            <p>
+                {{ error_msg_2 }}
+            </p>
+    {% else %}
+        {% if randoms %}
+            <div>
+                <p>
+                    <img src="{{ url_for('static', path='/images/df_img.png') }}" alt="df_img">
+                </p>
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+
+<!-- <img class="responsive" src="https://source.unsplash.com/400x400/?flower" width="400" height="400">
+<p>Source</p>
+
+<img class="responsive" src="https://source.unsplash.com/collection/827743/400x400" width="400" height="400">
+<p>Source</p> -->
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+
+
+{% endblock %}
