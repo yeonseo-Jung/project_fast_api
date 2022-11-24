@@ -23,10 +23,9 @@ router = APIRouter()
 
 @router.get("/random", response_class=HTMLResponse)
 def randoms(request: Request):
-    # key = os.getenv("random_key")
-    # print(key)
-    rands.init_ints()
-    print("\n\n", rands.integers, "\n\n")
+
+    rands.__init__()
+    print("\n\nInitialize!\n\n")
     html = "random.html"
     context = {
         "request": request
@@ -90,22 +89,31 @@ async def post_iterations(request: Request, iterations: str = Form(...)):
     iterations = iterations.strip()
     
     html = "random.html"
-    error_2 = False
+    
+    randoms: bool = False
+    error_2: bool = False
     error_msg_2 = "1 이상의 정수를 입력해 주세요."
+    error_msg_3 = "1개 이상의 수를 입력해 주세요."
     if isNatural(iterations):
-        rands.save_df_to_png(int(iterations))
-        randoms = True
+        rands.preprocessed(int(iterations))
+        randoms = rands.save_df_to_png()
+        plots = rands.save_plot_to_png()
     else:
-        randoms = False
+        plots: bool = False
+        randoms: bool = False
         if iterations != "":
             error_2 = True
     
+    print("\n\n", error_2, "\n\n")
     context = {
         "request": request,
         "integers": rands.integers,
         "error_2": error_2,
         "error_msg_2": error_msg_2,
+        "error_msg_3": error_msg_3,
         "randoms": randoms,
+        "plots": plots,
     }
-    
+    # rands.__init__()
+    # print("\n\nInitialize!\n\n")
     return templates.TemplateResponse(html, context)

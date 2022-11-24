@@ -84,26 +84,36 @@
     </p>
 </div>
 <div>
+    <p>
+        <form action="/random" method="get">
+            <input type="submit" value="Reset">
+        </form>
+    </p>
+</div>
+<div>
     {% if error_2 %}
-            <p>
-                {{ error_msg_2 }}
-            </p>
+        <p>
+            {{ error_msg_2 }}
+        </p>
     {% else %}
-        {% if randoms %}
-            <div>
+        <div>
+            {% if plots %}
+                <p>
+                    <img src="{{ url_for('static', path='/images/plot_img.png') }}" alt="plot_img">
+                </p>
+            {% endif %}
+            {% if randoms %}
                 <p>
                     <img src="{{ url_for('static', path='/images/df_img.png') }}" alt="df_img">
                 </p>
-            </div>
-        {% endif %}
+            {% else %}
+                <p>
+                    {{ error_msg_3 }}
+                </p>
+            {% endif %}
+        </div>
     {% endif %}
 </div>
-
-<!-- <img class="responsive" src="https://source.unsplash.com/400x400/?flower" width="400" height="400">
-<p>Source</p>
-
-<img class="responsive" src="https://source.unsplash.com/collection/827743/400x400" width="400" height="400">
-<p>Source</p> -->
 
 {% endblock %}
 
