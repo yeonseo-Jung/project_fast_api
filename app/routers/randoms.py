@@ -1,4 +1,4 @@
-import os
+from os import path
 import sys
 import time
 
@@ -7,10 +7,11 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 from pathlib import Path
-BASE_DIR = Path(__file__).resolve().parent.parent
+base_dir = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
+app_dir = path.join(base_dir, 'app')
 
-# root(app) 절대경로 추가
-sys.path.append(os.path.abspath(BASE_DIR))
+# 절대경로 추가
+sys.path.append(path.abspath(app_dir))
 from api.get_randoms import Random, get_random
 from exceptions.types import isInt_nonegative, isNatural
 
@@ -25,8 +26,8 @@ router = APIRouter()
 def randoms(request: Request):
 
     rands.__init__()
-    print("\n\nInitialize!\n\n")
-    html = "random.html"
+    print("\n\nInitialize\n\n")
+    html = "randoms.html"
     context = {
         "request": request
     }
@@ -37,7 +38,7 @@ def post_random(request: Request, integer: str = Form(...) or None):
     
     integer = integer.strip()
     
-    html = "random.html"
+    html = "randoms.html"
     error = False
     error_msg = "0 이상의 정수를 입력해 주세요."
     if isInt_nonegative(integer):
@@ -65,11 +66,13 @@ def post_randoms(request: Request, integers: str = Form(...)):
     
     integers = integers.strip()
     
-    html = "random.html"
+    html = "randoms.html"
     error_1 = False
     error_msg_1 = "0 이상의 정수를 입력해 주세요."
     if isInt_nonegative(integers):
-        rands.integers.append(int(integers))
+        integers = int(integers)
+        if integers not in rands.integers:
+            rands.integers.append(integers)
     else:
         if integers != "":
             error_1 = True
@@ -86,9 +89,9 @@ def post_randoms(request: Request, integers: str = Form(...)):
 @router.post("/random/iterations", response_class=HTMLResponse)
 async def post_iterations(request: Request, iterations: str = Form(...)):
     
+    rands.init_df()
     iterations = iterations.strip()
-    
-    html = "random.html"
+    html = "randoms.html"
     
     randoms: bool = False
     error_2: bool = False
@@ -104,7 +107,6 @@ async def post_iterations(request: Request, iterations: str = Form(...)):
         if iterations != "":
             error_2 = True
     
-    print("\n\n", error_2, "\n\n")
     context = {
         "request": request,
         "integers": rands.integers,
@@ -114,6 +116,5 @@ async def post_iterations(request: Request, iterations: str = Form(...)):
         "randoms": randoms,
         "plots": plots,
     }
-    # rands.__init__()
-    # print("\n\nInitialize!\n\n")
+
     return templates.TemplateResponse(html, context)

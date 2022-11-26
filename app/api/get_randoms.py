@@ -1,8 +1,9 @@
-import os
+from  os import path
 import math
 import random
 from pathlib import Path
 
+from tqdm import tqdm
 import pandas as pd
 import seaborn as sns
 import dataframe_image as dfi
@@ -11,9 +12,8 @@ import dataframe_image as dfi
 계수(seed)값이나 점화식 연산 시 생성되는 난수들이 아닌 최종 난수만 리턴하는 모듈입니다. (실전용)
 """
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-root = os.path.abspath(BASE_DIR.parent)
-images = os.path.join(root, "static/images")
+base_dir = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
+images = path.join(base_dir, "static/images")
 
 def get_1_or_0() -> int:
     return int(round(random.random(), 0))
@@ -130,7 +130,7 @@ def get_multiplier(m: int, max_iters: int = 10 ** 6) -> int:
     
     return a
 
-def get_random(n: int, interations: int = None) -> int:
+def get_random(n: int, iterations: int = None) -> int:
     """
     Linear congruential generator
         Recurrence Relation: Xn+1 = (a * Xn + c) % m
@@ -156,12 +156,12 @@ def get_random(n: int, interations: int = None) -> int:
 
         x: int = seed
         i: int = 0
-        if interations is None:
+        if iterations is None:
             while i < a:
                 x = (a * x + c) % m
                 i += 1  
         else:
-            while i < interations:
+            while i < iterations:
                 x = (a * x + c) % m
                 i += 1    
             
@@ -171,6 +171,7 @@ class Random:
     
     def __init__(self):
         self.init_ints()
+        self.preprocessed_df = pd.DataFrame()
         
     def init_ints(self):
         self.integers: list = []
@@ -178,60 +179,66 @@ class Random:
     def init_df(self):
         self.preprocessed_df = pd.DataFrame()
         
-    def get_randoms(self, interations: int = None) -> list:
-        """
-        multi integers random generator
+    def get_randoms(self, iterations: int = 1) -> list:
+        """Get randoms
+
+        Args:
+            iterations (int, optional): 정수 한 개당 난수 발생 반복 횟수.
+
+        Returns:
+            list: _description_
         """
         
         randoms = {}
         for i in self.integers:
-            j: int = 0
             rands: list = []
-            while j < interations:
+            for j in tqdm(range(iterations)):
                 rand = get_random(i)
                 rands.append(rand)
-                j += 1
             randoms[f'Input Num: {i}'] = rands
         
         return randoms
     
-    def preprocessed(self, interations: int = None) -> None:
-        randoms = self.get_randoms(interations)
+    def preprocessed(self, iterations: int) -> None:
+        """Preprocess
+
+        Args:
+            iterations (int, optional): 정수 한 개당 난수 발생 반복 횟수.
+        """
+        randoms = self.get_randoms(iterations)
         self.preprocessed_df = pd.DataFrame(randoms)
             
     
     def save_df_to_png(self) -> bool:
-        
+        """Save DataFrame to image(png)
+
+        Returns:
+            bool: True(success) or False(not)
+        """
         if self.preprocessed_df.empty:
             return False
         else:
-            file_path = os.path.join(images, 'df_img.png')
+            file_path = path.join(images, 'df_img.png')
             dfi.export(self.preprocessed_df, file_path, max_cols=-1, max_rows=-1)
             return True
         
     def save_plot_to_png(self) -> bool:
+        """Save seaborn plot to image(png) 
+
+        Returns:
+            bool: True(success) or False(not)
+        """
         
-        num = len(self.integers)
+        length = len(self.integers)
         if self.preprocessed_df.empty:
             return False
-        elif num == 1:
+        elif length == 1:
             data = self.preprocessed_df.iloc[:, 0]
             plot = sns.distplot(data)
-            plot.set(title=f"Input Number: {num}")
-            file_path = os.path.join(images, 'plot_img.png')
+            plot.set(title=f'Iterations: {len(data)}')
+            file_path = path.join(images, 'plot_img.png')
             plot.get_figure().savefig(file_path)
+            plot.get_figure().clf() 
             return True
         else:
             return False
-        
-    # def save_plot_to_png(self) -> None:
-        
-    #     nums = self.preprocessed_df.input_number.unique()
-    #     i = 0
-    #     for num in nums:
-    #         data = self.preprocessed_df.loc[self.preprocessed_df.input_number==num, 'random_number']
-    #         plot = sns.distplot(data)
-    #         plot.set(title=f"Input Number: {num}")
-    #         file_path = os.path.join(images, f'plot_img_{i}.png')
-    #         plot.get_figure().savefig(file_path)
-    #         i += 1
