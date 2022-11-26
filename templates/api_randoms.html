@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% set active_page = "random" %}
+{% set active_page = "api/random" %}
 
 {% block title %}api random number{% endblock %}
 
@@ -16,9 +16,12 @@
 <h3>Single Integer</h3>
 <div>
     <p>
-        <form action="/random/result" method="post" autocomplete="off">
+        <form action="/api/random/result" method="post" autocomplete="off">
             <label>Enter the Integer: </label>
-            <input type="text" name="integer" size="45" required />
+            <input type="text" name="integer" \
+            value="{{ integer }}" \
+            size="45" \
+            required />
             <input type="submit" value="Submit">
         </form>
     </p>
@@ -54,7 +57,7 @@
 <h3>Multi Integers</h3>
 <div>
     <p>
-        <form action="/random/add" method="post" autocomplete="off">
+        <form action="/api/random/add" method="post" autocomplete="off">
             <label>Enter the Integer: </label>
             <input type="text" name="integers" required />
             <input type="submit" value="Add">
@@ -76,7 +79,7 @@
 </div>
 <div>
     <p>
-        <form action="/random/iterations" method="post" autocomplete="off">
+        <form action="/api/random/iterations" method="post" autocomplete="off">
             <label>Enter the Iteration Counts: </label>
             <input type="text" name="iterations" required />
             <input type="submit" value="Submit">
@@ -85,7 +88,7 @@
 </div>
 <div>
     <p>
-        <form action="/random" method="get">
+        <form action="/api/random" method="get">
             <input type="submit" value="Reset">
         </form>
     </p>
