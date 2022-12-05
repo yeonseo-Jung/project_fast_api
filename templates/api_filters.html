@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% set active_page = "api/filter" %}
+
+{% block title %}api stock filter{% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block page_content %}
+<h2 class="cap">Stock Filter</h2><br>
+<!-- <div>
+    <h3>Quarters</h3>
+    <p>
+        <form action="/api/filter/result" method="post">
+            {% for q in quarters %}
+                <input type="checkbox" id="quarter" name="quarter" value="{{ q }}">
+                <label for="quarter">{{ q }}</label><br>
+            {% endfor %}
+            <input type="submit" value="Result">
+        </form>
+    </p>
+</div> -->
+<h3>Amounts</h3>
+<div>
+    <p>
+    </select>
+    <label>Choose a account:</label>
+    <select id="account" name="account" form="amounts">
+        {% for account in accounts %}
+            <option value="{{ account }}">{{ account }}</option>
+        {% endfor %}
+    </select>
+    </p>
+</div>
+<div>
+    <p>
+        <form action="/api/filter/add_amount" method="post" id="amounts" autocomplete="off">
+            <label>Min Amounts: </label>
+            <input type="text" name="min_amount" value=" "/>
+            <label>Max Amounts: </label>
+            <input type="text" name="max_amount" value=" "/>
+            <input type="submit" value="Add">
+        </form>
+    </p>
+</div><br>
+<h3>Ratios</h3>
+<div>
+    <p>
+    </select>
+    <label>Choose a ratio:</label>
+    <select id="ratio" name="ratio" form="ratios">
+        {% for ratio in ratios %}
+            <option value="{{ ratio }}">{{ ratio }}</option>
+        {% endfor %}
+    </select>
+    </p>
+</div>
+<div>
+    <p>
+        <form action="/api/filter/add_ratio" method="post" id="ratios" autocomplete="off">
+            <label>Min Ratios: </label>
+            <input type="text" name="min_ratio" value=" "/>
+            <label>Max Ratios: </label>
+            <input type="text" name="max_ratio" value=" "/>
+            <input type="submit" value="Add">
+        </form>
+    </p>
+</div>
+{% if _amounts %}
+    {% for account in _amounts.keys() %}
+        <div>
+            <li>
+                {{ account }}
+                {{ "|" }}
+                {{ "min amount: " }}
+                {{ _amounts[account][0] }}
+                {{ "|" }}
+                {{ "max amount: " }}
+                {{ _amounts[account][1] }}
+            </li>
+        </div>
+    {% endfor %}
+{% endif %}
+<br>
+{% if _ratios %}
+    {% for ratio in _ratios.keys() %}
+        <div>
+            <li>
+                {{ ratio }}
+                {{ "|" }}
+                {{ "min ratio: " }}
+                {{ _ratios[ratio][0] }}
+                {{ "|" }}
+                {{ "max ratio: " }}
+                {{ _ratios[ratio][1] }}
+            </li>
+        </div>
+    {% endfor %}
+{% endif %}
+<div>
+    <p>
+        <form action="/api/filter" method="get">
+            <input type="submit" value="Reset">
+        </form>
+    </p>
+</div>
+<div>
+    <p>
+        <form action="/api/filter/result" method="post">
+            <input type="submit" value="Result">
+        </form>
+    </p>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{% endblock %}
