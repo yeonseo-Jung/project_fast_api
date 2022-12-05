@@ -1,7 +1,10 @@
-from dataclasses import dataclass, asdict
+import sys
 from os import path, environ
+from dataclasses import dataclass, asdict
 
 base_dir = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
+sys.path.append(base_dir)
+from app.common.constants import DB
 
 @dataclass
 class Config:
@@ -12,15 +15,7 @@ class Config:
 
     DB_POOL_RECYCLE: int = 900
     DB_ECHO: bool = True
-    
-    
-    user_name = "root"
-    password = "jys9807!"
-    host_url = "localhost"
-    port_num = "3306"
-    db_name = "yeonseo"
-    db_url = f'mysql+pymysql://{user_name}:{password}@{host_url}:{port_num}/{db_name}?charset=utf8mb4'
-    DB_URL: str = environ.get("DB_URL", db_url)
+    DB_URL: str = environ.get("DB_URL", DB.db_url)
 
 
 

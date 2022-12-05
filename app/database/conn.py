@@ -12,7 +12,7 @@ class SQLAlchemy:
             self.init_app(app=app, **kwargs)
             
     def init_app(self, app: FastAPI, **kwargs):
-        """Initialize DB
+        """Initialize app
 
         Args:
             app (FastAPI): FastAPI instance
@@ -45,7 +45,28 @@ class SQLAlchemy:
             self._session.close_all()
             self._engine.dispose()
             logging.info("DB disconnected.")
-            
+    
+    def init_db(self, **kwargs):
+        """Initialize DB
+        """
+        
+        database_url = kwargs.get("DB_URL")
+        pool_recycle = kwargs.setdefault("DB_POOL_RECYCLE", 900)
+        echo = kwargs.setdefault("DB_ECHO", True)
+        
+        self._engine = create_engine(
+            database_url,
+            echo=echo,
+            pool_recycle=pool_recycle,
+            pool_pre_ping=True,
+        )
+        
+        self._session = sessionmaker(
+            autocommit=False,
+            autoflush=False,
+            bind=self._engine,
+        )
+    
     def get_db(self):
         """Maintain DB session 
         """

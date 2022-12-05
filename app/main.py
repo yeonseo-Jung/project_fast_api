@@ -9,7 +9,8 @@ from fastapi.templating import Jinja2Templates
 from library.helpers import *
 from common.config import conf
 from database.conn import db
-from routers import twoforms, randoms, accordion, api_randoms
+from database.models import Base
+from routers import twoforms, randoms, accordion, api_randoms, api_filters
 
 
 def create_app():
@@ -20,9 +21,14 @@ def create_app():
     c = conf()
     conf_dict = asdict(c)
     db.init_app(app, **conf_dict)
+    
+    # create tables    
+    # Base.metadata.create_all(bind=db._engine)
 
-    app.include_router(randoms.router)
     app.include_router(api_randoms.router)
+    app.include_router(api_filters.router)
+    
+    app.include_router(randoms.router)
     app.include_router(twoforms.router)
     app.include_router(accordion.router)
     
