@@ -10,7 +10,7 @@ from pathlib import Path
 base_dir = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
 app_dir = path.join(base_dir, 'app')
 
-# 절대경로 추가
+# abspath
 sys.path.append(path.abspath(app_dir))
 from api.get_randoms import Random, get_random
 from exceptions.types import isInt_nonegative, isNatural
@@ -23,14 +23,14 @@ templates = Jinja2Templates(directory="templates")
 router = APIRouter(prefix="/api/random")
 
 @router.get("/", response_class=HTMLResponse)
-def randoms(request: Request):
+def init(request: Request):
 
     rands.__init__()
-    print("\n\nInitialize\n\n")
-    html = "api_randoms.html"
+    print("\n\nInitialized\n\n")
     context = {
         "request": request
     }
+    html = "api_randoms.html"
     return templates.TemplateResponse(html, context=context)
 
 @router.post("/result", response_class=HTMLResponse)
@@ -38,7 +38,6 @@ def post_random(request: Request, integer: str = Form(...) or None):
     
     integer = integer.strip()
     
-    html = "api_randoms.html"
     error = False
     error_msg = "0 이상의 정수를 입력해 주세요."
     if isInt_nonegative(integer):
@@ -59,6 +58,7 @@ def post_random(request: Request, integer: str = Form(...) or None):
         "error_msg": error_msg,
     }
     
+    html = "api_randoms.html"
     return templates.TemplateResponse(html, context)
 
 @router.post("/add", response_class=HTMLResponse)
@@ -66,7 +66,6 @@ def post_randoms(request: Request, integers: str = Form(...)):
     
     integers = integers.strip()
     
-    html = "api_randoms.html"
     error_1 = False
     error_msg_1 = "0 이상의 정수를 입력해 주세요."
     if isInt_nonegative(integers):
@@ -84,6 +83,7 @@ def post_randoms(request: Request, integers: str = Form(...)):
         "error_msg_1": error_msg_1,
     }
     
+    html = "api_randoms.html"
     return templates.TemplateResponse(html, context)
 
 @router.post("/iterations", response_class=HTMLResponse)
@@ -91,7 +91,6 @@ async def post_iterations(request: Request, iterations: str = Form(...)):
     
     rands.init_df()
     iterations = iterations.strip()
-    html = "api_randoms.html"
     
     randoms: bool = False
     error_2: bool = False
@@ -117,4 +116,5 @@ async def post_iterations(request: Request, iterations: str = Form(...)):
         "plots": plots,
     }
 
+    html = "api_randoms.html"
     return templates.TemplateResponse(html, context)
