@@ -52,7 +52,7 @@ def get_filter(model, columns: list = None, **kwargs):
         elif len(key) == 2 and key[1] == 'in': cond.append((col.in_(val)))
     
     result = sess.execute(
-        select(*cols)
+        select(*cols).where(*cond)
     ).fetchall()
     
     return result
@@ -64,40 +64,3 @@ def convert_df(model, **kwargs):
     result_df = pd.DataFrame(result_dict)
     
     return result_df
-
-# def get_all(model):
-#     """Get table all data
-
-#     Args:
-#         model: Model
-#         db: BaseMixin (Session)
-#     """
-#     sess = next(db.session())
-#     obj = sess.query(model).all()
-    
-#     if sess is not None:
-#         sess.close()
-    
-#     return obj
-
-# def get_filter(model, stock_code: str or list):
-#     sess = next(db.session())
-#     query = sess.query(model)
-#     if type(stock_code) == str:
-#         obj = query.filter(model.stock_code==stock_code).all()
-#     elif type(stock_code) == list:
-#         if len(stock_code) == 1:
-#             stock_code = stock_code[0]
-#             obj = query.filter(model.stock_code==stock_code).all()
-#         else:
-#             obj = query.filter(model.stock_code.in_(stock_code)).all()
-#     else:
-#         raise TypeError("stock_code type error")
-        
-#     return obj
-
-# def get(model, **kwargs):
-#     sess = next(db.session())
-#     objs = sess.get(model, kwargs)
-        
-#     return objs
