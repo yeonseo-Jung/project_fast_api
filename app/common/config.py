@@ -4,7 +4,7 @@ from dataclasses import dataclass, asdict
 
 base_dir = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
 sys.path.append(base_dir)
-from app.common.constants import DB
+from app.common.consts import DB
 
 @dataclass
 class Config:
