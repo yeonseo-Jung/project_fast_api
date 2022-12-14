@@ -15,19 +15,18 @@ from fastapi.templating import Jinja2Templates
 # abspath
 base_dir = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
 sys.path.append(base_dir)
-from app.common.constants import Quarters
-# from app.database.crud import get_filter
-# from app.database.models import Stocks, Amounts, Ratios
-from app.database.models import Accounts
+from app.common.consts import Quarters
+from app.database.crud import get_filter
+from app.database.models import Accounts, Stocks, Amounts, Ratios
 from app.api.filters import Filter
 
+templates = Jinja2Templates(directory="templates")
+router = APIRouter(prefix="/api/filter")
 
 filter = Filter()
 accounts = filter.dart_amounts.account_nm_eng.unique()
 ratios = filter.dart_ratios.ratio.unique()
 quarters = Quarters()
-templates = Jinja2Templates(directory="templates")
-router = APIRouter(prefix="/api/filter")
 
 
 @router.get("/", response_class=HTMLResponse)
@@ -35,35 +34,18 @@ def init(request: Request):
     
     # init filter
     filter.init_filter()
-    print("\n\nInitialized\n\n")
+    
+    # 최근 8분기 
     filter.quarters = list(quarters.quarters.values())[:8]
-    # quarters_key = quarters.quarters.keys()
+    
     context = {
         "request": request,
-        # "quarters": quarters_key,
         "accounts": accounts,
         "ratios": ratios,
     }
     html = "api_filters.html"
     return templates.TemplateResponse(html, context=context)
 
-# @router.post("/result", response_class=HTMLResponse)
-# def post_filter(request: Request, quarter: str = Form(...) or None):
-    
-#     # print("\n\n", quarter, type(quarter), "\n\n")
-#     request_dict = request.__dict__
-#     _form = request_dict["_form"]
-#     print("\n\n", _form, "\n\n")
-    
-#     for key, val in _form.items():
-#         print(key, val)
-#     # print("\n\n", _form.keys(), "\n\n")
-#     print("\n\n", _form["quarter"], "\n\n")
-#     context = {
-#         "request": request
-#     }
-#     html = "api_filters.html"
-#     return templates.TemplateResponse(html, context=context)
 
 @router.post("/add_amount", response_class=HTMLResponse)
 def post_add(request: Request, account: str = Form(...) or None, min_amount: str = Form(...) or None, max_amount: str = Form(...) or None):
@@ -82,6 +64,7 @@ def post_add(request: Request, account: str = Form(...) or None, min_amount: str
     html = "api_filters.html"
     return templates.TemplateResponse(html, context=context)
 
+
 @router.post("/add_ratio", response_class=HTMLResponse)
 def post_add(request: Request, ratio: str = Form(...) or None, min_ratio: str = Form(...) or None, max_ratio: str = Form(...) or None):
     
@@ -99,8 +82,10 @@ def post_add(request: Request, ratio: str = Form(...) or None, min_ratio: str = 
     html = "api_filters.html"
     return templates.TemplateResponse(html, context=context)
 
+
 @router.post("/result", response_class=HTMLResponse)
 def post_result(request: Request):
+    
     # filtering & intersecting
     filter.filter_amounts()
     filter.filter_ratios()

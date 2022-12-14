@@ -43,7 +43,7 @@ class Filter:
     def filter_amounts(self):
         
         columns = ['stock_code'] + self.quarters
-        stock_codes = None
+        stock_codes = []
         dart_amounts_filtered = self.dart_amounts.copy()
         for account in self.amounts.keys():
 
@@ -72,7 +72,7 @@ class Filter:
     def filter_ratios(self):
         
         columns = ['stock_code'] + self.quarters
-        stock_codes = None
+        stock_codes = []
         dart_ratios_filtered = self.dart_ratios.copy()
         for ratio in self.ratios.keys():
             
