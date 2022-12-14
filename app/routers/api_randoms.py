@@ -26,7 +26,6 @@ router = APIRouter(prefix="/api/random")
 def init(request: Request):
 
     rands.__init__()
-    print("\n\nInitialized\n\n")
     context = {
         "request": request
     }
