@@ -57,10 +57,11 @@ def get_filter(model, columns: list = None, **kwargs):
     
     return result
 
-def convert_df(model, **kwargs):
+def convert_df(model, columns: list = None, **kwargs):
     
-    result = get_filter(model, **kwargs)
-    result_dict = list(map(lambda x: x[0].__dict__, result))
-    result_df = pd.DataFrame(result_dict)
+    result = get_filter(model, columns, **kwargs)
+    if columns is None:
+        result = list(map(lambda x: x[0].__dict__, result))
+    result_df = pd.DataFrame(result)
     
     return result_df

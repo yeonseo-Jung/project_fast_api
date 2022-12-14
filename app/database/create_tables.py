@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 
 base_dir = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
 sys.path.append(base_dir)
-from app.common.constants import DB
+from app.common.consts import DB
 from app.database.models import Base
 
 def create_table():

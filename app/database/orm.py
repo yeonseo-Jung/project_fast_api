@@ -9,10 +9,6 @@ from sqlalchemy.orm import Session
 base_dir = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
 sys.path.append(base_dir)
 from app.database.conn import db
-# from app.common.config import conf
-# c = conf()
-# conf_dict = asdict(c)
-# db.init_db(**conf_dict)
 
 class BaseMixin:
     id = Column(Integer, primary_key=True, index=True)
