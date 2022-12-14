@@ -10,7 +10,7 @@ from library.helpers import *
 from common.config import conf
 from database.conn import db
 from database.models import Base
-from routers import twoforms, randoms, accordion, api_randoms, api_filters
+from routers import twoforms, accordion, api_randoms, api_filters, auth
 
 
 def create_app():
@@ -24,11 +24,15 @@ def create_app():
     
     # create tables    
     # Base.metadata.create_all(bind=db._engine)
+    
+    # auth (register/login)
+    app.include_router(auth.router)
 
+    # APIs
     app.include_router(api_randoms.router)
     app.include_router(api_filters.router)
     
-    app.include_router(randoms.router)
+    # test
     app.include_router(twoforms.router)
     app.include_router(accordion.router)
     
