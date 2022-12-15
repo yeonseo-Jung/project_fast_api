@@ -1,7 +1,7 @@
 import sys
 from os import path
 
-from sqlalchemy import Column
+from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import (
     Integer,
     String,
@@ -32,9 +32,6 @@ class Stocks(Base, BaseMixin):
     amounts = Column(Float, nullable=True, default=None)
     market_cap = Column(Float, nullable=True, default=None)
     shares = Column(Float, nullable=True, default=None)
-    
-    # class __meta__:
-    #     extend_existing = True
     
 class Accounts(Base, BaseMixin):
     __tablename__ = "accounts"
@@ -123,3 +120,35 @@ class Users(Base, BaseMixin):
     sns_type = Column(Enum("FB", "G", "K"), nullable=True)
     marketing_agree = Column(Boolean, nullable=True, default=True)
     # keys = relationship("ApiKeys", back_populates="users")
+    
+    
+class StocksUsers(Base, BaseMixin):
+    __tablename__ = "stocks_users"
+    __table_args__ = {'extend_existing': True}
+
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
+    stock_id = Column(Integer, ForeignKey("stocks.id", ondelete="CASCADE"))
+
+
+# stocks_users = Table(
+#     "stocks_users",
+#     Base.metadata,
+#     Column("left_id", ForeignKey("left_table.id"), primary_key=True),
+#     Column("right_id", ForeignKey("right_table.id"), primary_key=True),
+# )
+
+
+# class Parent(Base):
+#     __tablename__ = "left_table"
+#     id = Column(Integer, primary_key=True)
+#     children = relationship(
+#         "Child", secondary=association_table, back_populates="parents"
+#     )
+
+
+# class Child(Base):
+#     __tablename__ = "right_table"
+#     id = Column(Integer, primary_key=True)
+#     parents = relationship(
+#         "Parent", secondary=association_table, back_populates="children"
+#     )
