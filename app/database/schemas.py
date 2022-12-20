@@ -30,7 +30,7 @@ from pydantic.networks import EmailStr, IPvAnyAddress
 
 
 class UserRegister(BaseModel):
-    # pip install 'pydantic[email]'
+    # pip3 install 'pydantic[email]'
     email: str = None
     pw: str = None
 

@@ -14,7 +14,7 @@ from starlette.responses import JSONResponse
 # abspath
 base_dir = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
 sys.path.append(base_dir)
-from app.common.consts import Jwt
+from app.common.consts import JWT_SECRET, JWT_ALGORITHM
 from app.database.models import Users
 from app.database.schemas import SnsType, Token, UserToken, UserRegister
 from app.common.config import conf
@@ -23,7 +23,6 @@ from app.database.conn import db
 c = conf()
 conf_dict = asdict(c)
 db.init_db(**conf_dict)
-_jwt = Jwt()
 
 router = APIRouter(prefix="/auth")
 
@@ -95,5 +94,5 @@ def create_access_token(*, data: dict = None, expires_delta: int = None):
     to_encode = data.copy()
     if expires_delta:
         to_encode.update({"exp": datetime.utcnow() + timedelta(hours=expires_delta)})
-    encoded_jwt = jwt.encode(to_encode, _jwt.JWT_SECRET, algorithm=_jwt.JWT_ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, JWT_SECRET, algorithm=JWT_ALGORITHM)
     return encoded_jwt
