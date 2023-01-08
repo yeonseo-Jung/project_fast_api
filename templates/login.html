@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% set active_page = "/auth/login/" %}
+
+{% block title %}login{% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block page_content %}
+<h2 class="cap">Login</h2><br>
+<div>
+    <p>
+        <form action="/auth/login/complete" method="post" id="login" autocomplete="off">
+            <label>Email: </label>
+            <input type="text" name="email" value=" "/>
+            <label>Password: </label>
+            <input type="text" name="password" value=" "/>
+            <input type="submit" value="login">
+        </form>
+    </p>
+</div>
+<div>
+    {% if token %}
+        <p>
+            {{ "Access Token: " }}
+            {{ token["Authorization"] }}
+        </p>
+    {% endif%}
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{% endblock %}

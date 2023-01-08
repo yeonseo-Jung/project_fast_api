@@ -164,17 +164,20 @@ async def access_control(request: Request, call_next):
         response = await call_next(request)
         if url != "/":
             await api_logger(request=request, response=response)
+        print("\n\n 로그인 예외 페이지 입니다.")
         return response
 
     try:
         # 템플릿 렌더링인 경우 쿠키에서 토큰 검사
-        cookies["Authorization"] = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTQsImVtYWlsIjoia29hbGFAZGluZ3JyLmNvbSIsIm5hbWUiOm51bGwsInBob25lX251bWJlciI6bnVsbCwicHJvZmlsZV9pbWciOm51bGwsInNuc190eXBlIjpudWxsfQ.4vgrFvxgH8odoXMvV70BBqyqXOFa2NDQtzYkGywhV48"
+        # cookies["Authorization"] = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTQsImVtYWlsIjoia29hbGFAZGluZ3JyLmNvbSIsIm5hbWUiOm51bGwsInBob25lX251bWJlciI6bnVsbCwicHJvZmlsZV9pbWciOm51bGwsInNuc190eXBlIjpudWxsfQ.4vgrFvxgH8odoXMvV70BBqyqXOFa2NDQtzYkGywhV48"
 
         if "Authorization" not in cookies.keys():
             raise NotAuthorized()
 
         token_info = await token_decode(access_token=cookies.get("Authorization"))
         request.state.user = UserToken(**token_info)
+        print(f"\n\n** Complete Login:\n - token: {token_info}\n - user: {request.state.user}")
+        
         response = await call_next(request)
         await api_logger(request=request, response=response)
         
