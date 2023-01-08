@@ -5,9 +5,11 @@ import pandas as pd
 
 base_dir = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
 sys.path.append(base_dir)
-from app.database.database import AccessDataBase
+from app.database.crud import get_df
+from app.common.consts import Quarters
+from app.database.models import Accounts, Stocks, Amounts, Ratios
 
-db = AccessDataBase('root', 'jys9807!', 'yeonseo')
+_quarters = Quarters().quarters
 class Filter:
     def __init__(self):
         self.init_tbl()
@@ -20,8 +22,11 @@ class Filter:
         self.init_codes()
         
     def init_tbl(self):
-        self.dart_amounts = db.get_tbl('amounts')
-        self.dart_ratios = db.get_tbl('ratios')
+        amounts_col = ["stock_code", "account_nm_eng"] + list(_quarters.values())
+        self.dart_amounts = get_df(model=Amounts, columns=amounts_col)
+        
+        ratios_col = ["stock_code", "ratio"] + list(_quarters.values())
+        self.dart_ratios = get_df(model=Ratios, columns=ratios_col)
         
     def init_quarters(self):
         # ["Q202211012", "Q202211013", "Q202111011", ...]

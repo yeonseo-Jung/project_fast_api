@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% set active_page = "api/filter" %}
+{% set active_page = "api/filter/" %}
 
 {% block title %}api stock filter{% endblock %}
 
@@ -14,13 +14,20 @@
     <p>
         <form action="/api/filter/result" method="post">
             {% for q in quarters %}
-                <input type="checkbox" id="quarter" name="quarter" value="{{ q }}">
-                <label for="quarter">{{ q }}</label><br>
+            <input type="checkbox" id="quarter" name="quarter" value="{{ q }}">
+            <label for="quarter">{{ q }}</label><br>
             {% endfor %}
             <input type="submit" value="Result">
         </form>
     </p>
 </div> -->
+<div>
+    <p>
+        <form action="/api/filter" method="get">
+            <input type="submit" value="Reset">
+        </form>
+    </p>
+</div>
 <h3>Amounts</h3>
 <div>
     <p>
@@ -98,13 +105,6 @@
         </div>
     {% endfor %}
 {% endif %}
-<div>
-    <p>
-        <form action="/api/filter" method="get">
-            <input type="submit" value="Reset">
-        </form>
-    </p>
-</div>
 <div>
     <p>
         <form action="/api/filter/result" method="post">

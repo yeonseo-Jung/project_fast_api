@@ -1,19 +1,25 @@
 # necessary
+import sys
+from os import path
 import time
 import pandas as pd
 
 # db connection 
 import pymysql
 # import sqlalchemy
-    
+
+base_dir = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
+sys.path.append(base_dir)
+from app.common.consts import DB
+conn = DB()    
 class AccessDataBase:
     
-    def __init__(self, user_name, password, db_name):
+    def __init__(self, db_name):
         # user info & db
-        self.user_name = user_name
-        self.password = password
+        self.user_name = conn.user_name
+        self.password = conn.password
         self.db_name = db_name
-        self.host_url = "localhost"
+        self.host_url = conn.host_url
         
     def _connect(self):
         ''' db connect '''

@@ -48,7 +48,7 @@ def init(request: Request):
 
 
 @router.post("/add_amount", response_class=HTMLResponse)
-def post_add(request: Request, account: str = Form(...) or None, min_amount: str = Form(...) or None, max_amount: str = Form(...) or None):
+def post_add_amount(request: Request, account: str = Form(...) or None, min_amount: str = Form(...) or None, max_amount: str = Form(...) or None):
     
     min_amount, max_amount, status = filter.preprocessor(min_amount, max_amount, "amount")
     if status:
@@ -66,7 +66,7 @@ def post_add(request: Request, account: str = Form(...) or None, min_amount: str
 
 
 @router.post("/add_ratio", response_class=HTMLResponse)
-def post_add(request: Request, ratio: str = Form(...) or None, min_ratio: str = Form(...) or None, max_ratio: str = Form(...) or None):
+def post_add_ratio(request: Request, ratio: str = Form(...) or None, min_ratio: str = Form(...) or None, max_ratio: str = Form(...) or None):
     
     min_ratio, max_ratio, status = filter.preprocessor(min_ratio, max_ratio, "ratio")
     if status:
@@ -90,13 +90,15 @@ def post_result(request: Request):
     filter.filter_amounts()
     filter.filter_ratios()
     filter.intersect()
+    codes_filtered = filter.codes_filtered
     
     context = {
         "request": request,
         "accounts": accounts,
         "ratios": ratios,
         "_amounts": filter.amounts,
-        "_ratios" :filter.ratios,
+        "_ratios": filter.ratios,
+        "codes": codes_filtered,
     }
     html = "api_filters.html"
     return templates.TemplateResponse(html, context=context)

@@ -57,7 +57,7 @@ def get_filter(model, columns: list = None, **kwargs):
     
     return result
 
-def convert_df(model, columns: list = None, **kwargs):
+def get_df(model, columns: list = None, **kwargs):
     
     result = get_filter(model, columns, **kwargs)
     if columns is None:

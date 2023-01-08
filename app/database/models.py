@@ -119,7 +119,6 @@ class Users(Base, BaseMixin):
     profile_img = Column(String(length=1000), nullable=True)
     sns_type = Column(Enum("FB", "G", "K"), nullable=True)
     marketing_agree = Column(Boolean, nullable=True, default=True)
-    # keys = relationship("ApiKeys", back_populates="users")
     
     
 class StocksUsers(Base, BaseMixin):
@@ -128,7 +127,28 @@ class StocksUsers(Base, BaseMixin):
 
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
     stock_id = Column(Integer, ForeignKey("stocks.id", ondelete="CASCADE"))
-
+    
+class Rates(Base, BaseMixin):
+    __tablename__ = "rates"
+    __table_args__ = {'extend_existing': True}
+    
+    stock_code = Column(String(length=20), nullable=True, default=None)
+    account_nm_eng = Column(String(length=255), nullable=True, default=None)
+    account_nm_kor = Column(String(length=255), nullable=True, default=None)
+    QoQ = Column(Float, nullable=True, default=None)
+    YoY = Column(Float, nullable=True, default=None)
+    
+class Factors(Base, BaseMixin):
+    __tablename__ = "factors"
+    __table_args__ = {'extend_existing': True}
+    
+    stock_code = Column(String(length=20), nullable=True, default=None)
+    stock_name = Column(String(length=255), nullable=True, default=None)
+    account_nm_eng = Column(String(length=255), nullable=True, default=None)
+    amounts = Column(Float, nullable=True, default=None)
+    market_cap = Column(Float, nullable=True, default=None)
+    factor = Column(String(length=20), nullable=True, default=None)
+    factor_value = Column(Float, nullable=True, default=None)
 
 # stocks_users = Table(
 #     "stocks_users",

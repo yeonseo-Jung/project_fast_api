@@ -1,6 +1,6 @@
 class DB:
     user_name = "root"
-    password = "jys9807!"
+    password = "jys1013011!"
     host_url = "localhost"
     port_num = "3306"
     db_name = "yeonseo"
@@ -9,6 +9,7 @@ class DB:
 class Quarters:
     quarters = {
         # 2022
+        "2022__Q2": "Q202211012",
         "2022__Q1": "Q202211013",
         
         # 2021
@@ -39,6 +40,6 @@ class Quarters:
 JWT_SECRET = "ABCD1234!"
 JWT_ALGORITHM = "HS256"
 EXCEPT_PATH_LIST = ["/", "/openapi.json"]
-EXCEPT_PATH_REGEX = "^(/docs|/redoc|/api/auth)"
+EXCEPT_PATH_REGEX = "^(/docs|/redoc|/auth|/static|/test)"
 MAX_API_KEY = 3
 MAX_API_WHITELIST = 10
